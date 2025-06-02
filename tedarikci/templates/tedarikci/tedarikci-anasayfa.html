@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <title>Tedarikçi Anasayfa</title> {# Title updated #}
+  </head>
+  <body class="my-tedarikci-container">
+  
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg my-tedarikci-input ">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{% url 'tedarikci:tedarikci_anasayfa' %}">FAZLAYIZ (Tedarikçi)</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon "></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav justify-content-end w-100">
+            <a class="nav-link active" aria-current="page" href="{% url 'tedarikci:tedarikci_anasayfa' %}">Anasayfa</a>
+            <a class="nav-link" href="{% url 'tedarikci:tedarikci_gida_formu' %}">Gıda Formu</a>
+            <a class="nav-link" href="{% url 'tedarikci:tedarikci_food_list' %}">Gıda İlanlarım</a>
+            <a class="nav-link" href="{% url 'tedarikci:tedarikci_incoming_applications' %}">Gelen Başvurular</a> {# URL güncellendi #}
+            <a class="nav-link" href="{% url 'tedarikci:tedarikci_profile' %}">Profilim</a>  {# Profilim linki eklendi #}
+            <a class="nav-link" href="{% url 'tedarikci:login' %}">Çıkış Yap</a>  {# Henüz view veya URL yok, şimdilik yoruma alındı #}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4 text-white"> {# Added container for main content #}
+        <div class="row">
+            <div class="col">
+                {% if user.is_authenticated %} {# Check if user is logged in #}
+                    <h2>Merhaba, {{ user.tedarikci_profile.tedarikci_ad }}!</h2> {# Welcome message using profile name #}
+                    <p>Tedarikçi Anasayfasına Hoş Geldiniz.</p>
+                    {# You can add more dynamic content here based on the TedarikciProfile or other models #}
+
+                    <h3>Yapılacaklar / Durum Özeti (Örnek)</h3> {# Placeholder for main content #}
+                    <ul>
+                        <li>Bekleyen gıda fazlası ilanları: X adet</li>
+                        <li>Onaylanmış gıda fazlası ilanları: Y adet</li>
+                        <li>Bekleyen teslimat talepleri: Z adet</li>
+                        <li>Tamamlanmış teslimatlar: W adet</li>
+                    </ul>
+                    <p>Buraya tedarikçiye özel bilgiler ve aksiyon butonları eklenecek.</p>
+
+                {% else %}
+                    <p>Bu sayfayı görüntülemek için giriş yapmalısınız.</p>
+                    <a href="{% url 'tedarikci:user_login' %}" class="btn btn-primary">Giriş Yap</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+  
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <title>Gıda Formu</title>
+  </head>
+  <body>
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg my-tedarikci-input">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'tedarikci:tedarikci_anasayfa' %}">FAZLAYIZ (Tedarikçi)</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav justify-content-end w-100">
+            <a class="nav-link" href="{% url 'tedarikci:tedarikci_anasayfa' %}">Anasayfa</a>
+            <a class="nav-link active" aria-current="page" 
+            href="{% url 'tedarikci:tedarikci_gida_formu' %}">Gıda Formu</a>
+            <a class="nav-link" href="{% url 'tedarikci:tedarikci_food_list' %}">Gıda İlanlarım</a> {# Yeni eklendi #}
+            <a class="nav-link" href="{% url 'tedarikci:tedarikci_incoming_applications' %}">Gelen Başvurular</a>
+            
+            <a class="nav-link" href="{% url 'tedarikci:tedarikci_profile' %}">Profilim</a>
+            <a class="nav-link" href="{% url 'tedarikci:login' %}">Çıkış Yap</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Gıda Ekleme Formu</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="foodName" class="form-label">Gıda Adı</label>
+                <input type="text" class="form-control" id="foodName" name="food_name" required>
+            </div>
+            <div class="mb-3">
+                <label for="foodQuantity" class="form-label">Miktar</label>
+                <div class="row">
+                    <div class="col-md-6">
+                         <input type="number" class="form-control" id="foodQuantity" name="food_quantity" required min="0">
+                    </div>
+                    <div class="col-md-6">
+                      <select class="form-select" id="foodUnit" name="food_unit" required>
+                        <option value="adet">Adet</option>
+                        <option value="kilo">Kilo</option>
+                        <option value="litre">Litre</option>
+                    </select>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="expiryDate" class="form-label">Son Kullanım Tarihi</label>
+                <input type="date" class="form-control" id="expiryDate" name="expiry_date" required>
+            </div>
+            <div class="mb-3">
+                <label for="foodStatus" class="form-label">Durum</label>
+                <select class="form-select" id="foodStatus" name="food_status" required>
+                    <option value="iyi">İyi</option>
+                    <option value="yaklasmis">Son kullanım tarihi yaklaşmış</option>
+                    <option value="kotu">Kötü</option>
+                </select>
+            </div>
+            <div class="mb-3">
+              <label for="foodImage" class="form-label">Gıda Resmi</label>
+                <input type="file" class="form-control" id="foodImage" name="food_image" accept=".jpg, .jpeg, image/jpeg, image/jpg, .heic, image/heic, image/heif, .webp, image/webp" required onchange="validateImage(this)">
+                <small id="imageWarning" class="form-text text-danger d-none">❌ Dosya çok büyük. Maksimum 5MB olmalı.</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Gıdayı Yayınla</button>
+        </form>
+    </div>
+
+    <script src="{% static 'js/resim-yukleme.js' %}"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

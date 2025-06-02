@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <title>Başvurularım</title>
+  </head>
+  <body class="my-stk-container">
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg my-stk-input">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{% url 'stk:main' %}">FAZLAYIZ (STK)</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav justify-content-end w-100">
+            <a class="nav-link " href="{% url 'stk:main' %}">Anasayfa</a>
+            <a class="nav-link " href="{% url 'stk:stk_food_showcase' %}">Gıda Vitrini</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'stk:stk_my_applications' %}">Gıda Başvurularım</a> {# Gıda Başvurularım linki eklendi #}
+            <a class="nav-link " href="{% url 'stk:stk_test_status' %}">Test Durumu</a> {# Test Durumu linki eklenecek #}
+            <a class="nav-link " href="{% url 'stk:delivery_status' %}">Teslimat Durumu</a> {# Teslimat Durumu linki eklenecek #}
+            <a class="nav-link " href="{% url 'stk:stk_profile' %}">Profilim</a> {# Profilim linki eklenecek #}
+            <a class="nav-link " href="{% url 'stk:login'%}">Çıkış yap</a> {# Çıkış yap linki eklenecek #}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4 text-white">
+        <h2>Gıda Başvurularım</h2>
+
+        {% if applications %}
+            <div class="row">
+                {% for application in applications %}
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 bg-dark text-white">
+                            {% if application.food_item.image %}
+                                <img src="{{ application.food_item.image.url }}" class="card-img-top" alt="{{ application.food_item.name }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <img src="{% static 'img/no_food_image.png' %}" class="card-img-top" alt="Resim Yok" style="height: 200px; object-fit: cover;">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ application.food_item.name }}</h5>
+                                <p class="card-text">Miktar: {{ application.food_item.quantity }} {{ application.food_item.get_unit_display }}</p>
+                                <p class="card-text">Son Kullanım Tarihi: {{ application.food_item.expiry_date }}</p>
+                                <p class="card-text">Gıda Durumu: {{ application.food_item.get_status_display }}</p>
+                                <hr class="border-white">
+                                <p class="card-text">Başvuru Durumu: <strong>
+                                    {% if application.status == 'pending' %}
+                                        <span class="text-warning">{{ application.get_status_display }}</span> {# Beklemede - Sarı #}
+                                    {% elif application.status == 'approved' %}
+                                        <span class="text-success">{{ application.get_status_display }}</span> {# Onaylandı - Yeşil #}
+                                    {% elif application.status == 'rejected' %}
+                                        <span class="text-danger">{{ application.get_status_display }}</span> {# Reddedildi - Kırmızı #}
+                                    {% else %}
+                                        {{ application.get_status_display }} {# Diğer durumlar için varsayılan renk #}
+                                    {% endif %}
+                                </strong></p>
+                                {# Kurye ile ilgili alanlar kaldırıldı #}
+                            </div>
+                            <div class="card-footer text-end">
+                                <small class="text-white">Başvuru Tarihi: {{ application.applied_at|date:"d.m.Y H:i" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Henüz başvurduğunuz bir gıda ürünü bulunmamaktadır.</p>
+            <a href="{% url 'stk:stk_food_showcase' %}" class="btn btn-primary">Gıda Vitrinini Görüntüle</a>
+        {% endif %}
+
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

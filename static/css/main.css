@@ -1,0 +1,131 @@
+.my-tedarikci-container {
+  background-color: #00275a;
+}
+.my-tedarikci-button {
+  background-color: #f8e21c;
+}
+.my-tedarikci-button:hover {
+  background-color: #fcc100;
+  color: #000;
+}
+.my-tedarikci-button:active {
+  background-color: #fcac00 !important;
+}
+.my-tedarikci-button:focus {
+  background-color: #fbff00;
+  color: #000;
+}
+.my-tedarikci-input {
+  background-color: #f8e21c;
+}
+.my-tedarikci-input.form-control::-moz-placeholder {
+  color: #000;
+}
+.my-tedarikci-input.form-control::placeholder {
+  color: #000;
+}
+.my-tedarikci-input.form-control:focus {
+  background-color: #fbff00;
+  color: #000;
+}
+.my-tedarikci-register-form {
+  background-color: #033d88;
+}
+
+.my-stk-container {
+  background-color: #299903;
+}
+.my-stk-input.form-control {
+  background-color: #49688d;
+  color: #fff;
+}
+.my-stk-input.form-control:focus {
+  background-color: #6c757d;
+}
+.my-stk-input.form-control::-moz-placeholder {
+  color: #fff;
+}
+.my-stk-input.form-control::placeholder {
+  color: #fff;
+}
+.my-stk-button {
+  background-color: #49688d;
+}
+.my-stk-button:hover {
+  background-color: #3e5777;
+}
+.my-stk-button:active {
+  background-color: #374d69 !important;
+  border: none;
+}
+.my-stk-register-button {
+  background-color: #49688d;
+  color: #fff;
+}
+.my-stk-register-button:hover {
+  color: #fff;
+}
+.my-stk-register-form {
+  background-color: #33bd05;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
+
+.my-logo {
+  max-width: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+@media (max-width: 575px) {
+  .my-logo {
+    max-height: 45vh;
+  }
+}
+@media (min-width: 576px) {
+  .my-logo {
+    max-height: 50vh;
+  }
+}
+@media (min-width: 768px) {
+  .my-logo {
+    max-height: 60vh;
+  }
+}
+@media (min-width: 992px) {
+  .my-logo {
+    max-height: 65vh;
+  }
+}
+@media (min-width: 1200px) {
+  .my-logo {
+    max-height: 70vh;
+  }
+}
+@media (min-width: 1400px) {
+  .my-logo {
+    max-height: 75vh;
+  }
+}
+
+.forgotten-password {
+  color: white;
+  text-decoration: none;
+  transition: 0.15s;
+}
+.forgotten-password:hover {
+  color: #e6a815;
+}
+
+.my-text-danger {
+  color: hsla(0, 93%, 48%, 0.74);
+}
+.my-text-success {
+  color: hsl(113, 86%, 46%);
+  background-color: yellowgreen;
+}
+
+.nav-link {
+  font-size: 1.25rem;
+}/*# sourceMappingURL=main.css.map */

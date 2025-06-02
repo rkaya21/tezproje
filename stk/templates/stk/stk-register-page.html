@@ -1,0 +1,518 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" /> {# DEĞİŞİKLİK BURADA #}
+
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container-fluid my-stk-container min-vh-100">
+      <div class="row min-vh-100">
+        <div
+          class="col-12 col-lg-4 d-flex justify-content-center align-items-center"
+        >
+          <img
+            src="{% static 'img/FazlayizLogo.png' %}" {# DEĞİŞİKLİK BURADA #}
+            alt="Logo"
+            class="img-fluid my-logo"
+          />
+        </div>
+        <div
+          class="col-12 col-lg-8 d-flex justify-content-start align-items-start"
+        >
+          <form
+            class="mt-5 text-white my-stk-register-form border border-5 w-100"
+            id="myForm"
+            onsubmit="return finalValidation()"
+            method="POST" 
+            enctype="multipart/form-data" 
+            action="{% url 'stk:register'%}" 
+          >
+            {% csrf_token %} {# {{change 4}} CSRF koruması için gerekli #}
+
+            {% if messages %}
+              <ul class="messages my-text-danger bg-light fw-bold">
+                  {% for message in messages %}
+                      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                  {% endfor %}
+              </ul>
+            {% endif %}
+
+            <h2 class="text-center my-4">STK KAYIT SAYFASI</h2>
+            <div class="d-flex flex-column flex-lg-row">
+              <div class="px-3 col-12 col-lg-6">
+                <div class="mb-3">
+                  <label for="stkAd" class="form-label"
+                    ><strong>STK Ad</strong></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control my-stk-input"
+                    id="stkAd"
+                    name="stkAd"
+                    placeholder="STK Tam Adı"
+                    required
+                    maxlength="150"
+                  />
+                </div>
+                <div class="row">
+                  <div class="mb-3 pe-1 col-lg-6">
+                    <label for="stkTemsilciAd"><strong>Ad</strong></label>
+                    <input
+                      type="text"
+                      class="form-control my-stk-input"
+                      id="stkTemsilciAd"
+                      name="stkTemsilciAd"
+                      placeholder="Temsilci Adı"
+                      required
+                      maxlength="40"
+                      oninput="formatNameInput(this)"
+                    />
+                  </div>
+                  <div class="mb-3 ps-1 col-lg-6">
+                    <label for="stkTemsilciSoyad"><strong>Soyad</strong></label>
+                    <input
+                      type="text"
+                      class="form-control my-stk-input"
+                      id="stkTemsilciSoyad"
+                      name="stkTemsilciSoyad"
+                      placeholder="Temsilci Soyadı"
+                      required
+                      maxlength="50"
+                      oninput="formatNameInput(this)"
+                    />
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label"
+                    ><strong>E-posta</strong></label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-control my-stk-input"
+                    placeholder="ornek@mail.com"
+                    required
+                    maxlength="150"
+                    oninput="validateEmail(this)"
+                  />
+                  <div
+                    id="emailWarning"
+                    class="my-text-danger mt-1 d-none fw-bold bg-light"
+                    style="font-size: 0.9rem"
+                  >
+                    ❌ Geçerli bir e-posta adresi girin.
+                  </div>
+                  <div
+                    id="emailSuccess"
+                    class="text-success mt-1 d-none fw-bold bg-light"
+                    style="font-size: 0.9rem"
+                  >
+                    ✅ E-posta formatı geçerli.
+                  </div>
+                </div>
+                <div class="mb-3 position-relative">
+                  <label class="form-label" for="inputPassword4"
+                    ><strong>Şifre</strong>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-secondary ms-2 py-0 px-2"
+                      onclick="togglePasswordInfo()"
+                      style="font-size: 0.9rem"
+                    >
+                      <i class="fas fa-info-circle text-white"></i>
+                    </button>
+                  </label>
+                  <div class="input-group">
+                    <input
+                      type="password"
+                      class="form-control my-stk-input"
+                      id="inputPassword4"
+                      name="inputPassword4"
+                      placeholder="Şifre"
+                      required
+                      maxlength="15"
+                      oninput="validatePassword(this); validatePasswordMatch();"
+                    />
+                    <button
+                      class="btn btn-secondary"
+                      type="button"
+                      onclick="togglePasswordVisibility('inputPassword4', this)"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                  <div
+                    id="passwordWarning"
+                    class="text-danger bg-light mt-1 d-none fw-bold"
+                    style="font-size: 0.9rem"
+                  >
+                    ❌ Şifre kurallarına uymuyor.
+                  </div>
+                  <div
+                    id="passwordSuccess"
+                    class="text-success bg-light mt-1 d-none fw-bold"
+                    style="font-size: 0.9rem"
+                  >
+                    ✅ Şifre geçerli.
+                  </div>
+                  <div
+                    id="passwordInfoBox"
+                    class="border p-2 rounded bg-secondary shadow-sm position-absolute"
+                    style="
+                      top: 100%;
+                      left: 0;
+                      z-index: 10;
+                      width: 300px;
+                      display: none;
+                      font-size: 0.9rem;
+                    "
+                  >
+                    <i class="fa-solid fa-lock"></i>
+                    <strong>Şifre Kuralları:</strong><br />
+                    • En az 8 karakter<br />
+                    • En fazla 15 karakter<br />
+                    • En az 1 büyük harf<br />
+                    • En az 1 küçük harf<br />
+                    • En az 1 rakam<br />
+                    • En az 1 özel karakter (!@#$%^&*)
+                  </div>
+                </div>
+                <div class="mb-3 position-relative">
+                  <label class="form-label" for="confirmPassword">
+                    <strong>Şifre Tekrar</strong>
+                  </label>
+                  <div class="input-group">
+                    <input
+                      type="password"
+                      class="form-control my-stk-input"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      placeholder="Şifre Tekrar"
+                      required
+                      maxlength="15"
+                      oninput="validatePasswordMatch()"
+                    />
+                    <button
+                      class="btn btn-secondary"
+                      type="button"
+                      onclick="togglePasswordVisibility('confirmPassword', this)"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                  <div
+                    id="passwordMatchWarning"
+                    class="text-danger bg-light mt-1 d-none fw-bold"
+                    style="font-size: 0.9rem"
+                  >
+                    ❌ Şifreler aynı değil.
+                  </div>
+                  <div
+                    id="passwordMatchSuccess"
+                    class="text-success bg-light mt-1 d-none fw-bold"
+                    style="font-size: 0.9rem"
+                  >
+                    ✅ Şifreler aynı.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="adres" class="form-label"
+                    ><strong>Adres</strong></label
+                  >
+                  <div class="input-group">
+                    <span class="input-group-text bg-secondary text-white"
+                      ><strong>Denizli</strong></span
+                    >
+                    <textarea
+                      name="adres"
+                      id="adres"
+                      rows="3"
+                      class="form-control my-stk-input"
+                      placeholder="Örnek: Pamukkale, Asmalıevler Mah., 123. Sokak No:5"
+                      required
+                      maxlength="350"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="px-3 col-12 col-lg-6">
+                <div class="row">
+                  <div class="mb-3 pe-1 col-lg-7">
+                    <label for="cepTelefon" class="form-label"
+                      ><strong>Cep Telefonu</strong></label
+                    >
+                    <input
+                      type="text"
+                      id="cepTelefon"
+                      name="cepTelefon"
+                      class="form-control my-stk-input"
+                      maxlength="11"
+                      required
+                      oninput="validatePhone()"
+                    />
+                    <div
+                      class="bg-light invalid-feedback my-text-danger fw-bold"
+                      id="phoneInvalid"
+                    >
+                      ❌ Lütfen geçerli bir 11 haneli telefon numarası giriniz.
+                    </div>
+                    <div
+                      class="bg-light valid-feedback my-text-success fw-bold"
+                      id="phoneValid"
+                    >
+                      ✅ Telefon formatı geçerli.
+                    </div>
+                  </div>
+                  <div class="mb-3 ps-1 col-lg-5">
+                    <label for="stkTuru" class="form-label"
+                      ><strong>STK Türü</strong></label
+                    >
+                    <select class="form-select" id="stkTuru" name="stkTuru" required>
+                      <option selected disabled value="">Seçiniz</option>
+                      <option value="dernek">Dernek</option>
+                      <option value="vakif">Vakıf</option>
+                    </select>
+                    <div class="invalid-feedback">
+                      Lütfen STK türünü seçiniz.
+                    </div>
+                  </div>
+                  <div id="kutukNoDiv" class="mb-3 d-none">
+                    <label for="kutukNo" class="form-label"
+                      ><strong>Kütük Numarası</strong></label
+                    >
+                    <input
+                      type="text"
+                      id="kutukNo"
+                      name="kutukNo"
+                      class="form-control my-stk-input"
+                      placeholder="20-123-456"
+                      required
+                      maxlength="10"
+                      oninput="formatKutukNo(this)"
+                    />
+                    <div
+                      id="kutukWarning"
+                      class="my-text-danger mt-1 d-none bg-light fw-bold"
+                      style="font-size: 0.9rem"
+                    >
+                      ❌ Kütük numarası formatı geçersiz. (20-123-456 gibi
+                      giriniz)
+                    </div>
+                    <div
+                      id="kutukSuccess"
+                      class="my-text-success mt-1 d-none bg-light fw-bold"
+                      style="font-size: 0.9rem"
+                    >
+                      ✅ Kütük numarası formatı geçerli.
+                    </div>
+                  </div>
+
+                  <div id="etebligatDiv" class="mb-3 d-none">
+                    <label for="etebligat" class="form-label"
+                      ><strong>E-Tebligat Adresi (opsiyonel)</strong></label
+                    >
+                    <input
+                      type="text"
+                      id="etebligat"
+                      name="etebligat"
+                      class="form-control my-stk-input"
+                      placeholder="12345-67890-12345"
+                      maxlength="19"
+                      oninput="formatEtebligat(this)"
+                    />
+                    <div
+                      id="etebligatWarning"
+                      class="my-text-danger mt-1 d-none bg-light fw-bold"
+                      style="font-size: 0.9rem"
+                    >
+                      ❌ E-Tebligat adresi sadece rakamlardan oluşmalı ve şu
+                      formatta olmalı: 12345-67890-12345
+                    </div>
+                    <div
+                      id="etebligatSuccess"
+                      class="my-text-success mt-1 d-none bg-light fw-bold"
+                      style="font-size: 0.9rem"
+                    >
+                      ✅ E-Tebligat adresi formatı geçerli.
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="faaliyetBelgesi" class="form-label"
+                    ><strong>Faaliyet Belgesi (PDF)</strong></label
+                  >
+                  <input
+                    class="form-control my-stk-input"
+                    type="file"
+                    id="faaliyetBelgesi"
+                    name="faaliyetBelgesi"
+                    accept=".pdf,application/pdf"
+                    required
+                    onchange="validatePDF(this)"
+                  />
+                  <div
+                    id="fileWarning"
+                    class="text-danger mt-1 d-none fw-bold"
+                    style="font-size: 0.9rem"
+                  >
+                    ❌ Dosya çok büyük. Maksimum 2MB olmalı.
+                  </div>
+                </div>
+
+                <div class="mb-3 form-check">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="termsCheckbox"
+                    name="termsCheckbox"
+                    required
+                  />
+                  <label class="form-check-label" for="termsCheckbox">
+                    <small>
+                      <a
+                        class="link-warning"
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#policyModal"
+                      >
+                        <strong
+                          >Gizlilik Politikası ve Kullanım Şartları’nı</strong
+                        >
+                      </a>
+                      <strong>okudum ve kabul ediyorum.</strong>
+                    </small>
+                  </label>
+                </div>
+
+                <button
+                  type="submit"
+                  class="btn btn-primary w-100 fw-bold mb-4"
+                >
+                  Kayıt Ol
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="policyModal"
+      tabindex="-1"
+      aria-labelledby="policyModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="policyModalLabel">
+              Gizlilik Politikası ve Kullanım Şartları
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Kapat"
+            ></button>
+          </div>
+          <div class="modal-body" style="white-space: pre-line">
+            <b>1. Giriş</b>
+            Bu metin, Gıda Fazlası Yönetimi Sistemi’ne (“Sistem”) kayıt olan
+            Sivil Toplum Kuruluşları (STK) ve Gıda Sağlayıcılar için geçerli
+            olan gizlilik politikası ve kullanım şartlarını içermektedir.
+            Sistemi kullanarak bu şartları kabul etmiş sayılırsınız.
+
+            <b>2. Toplanan Veriler</b>
+            Sistemimiz aşağıdaki kişisel verileri toplar ve işler:
+
+            <ins>STK Kayıtlarında:</ins>
+            - STK Adı (Tam Adı) - Temsilcinin Adı ve Soyadı - E-posta, Şifre
+            (gizli şekilde saklanır) - Adres, Cep Telefonu - STK Türü
+            (Dernek/Vakıf) - Dernekse: Kütük Numarası - Vakıfsa: E-tebligat
+            Adresi (varsa zorunlu) - Faaliyet Belgesi (PDF)
+
+            <ins>Gıda Sağlayıcı Kayıtlarında:</ins>
+            - Sağlayıcı Kurum Adı - Temsilcinin Adı ve Soyadı - E-posta, Şifre
+            (gizli şekilde saklanır) - Adres, Cep Telefonu - Vergi Numarası -
+            Vergi Levhası (PDF)
+
+            <b>3. Verilerin Kullanım Amacı</b>
+            Toplanan veriler yalnızca: - Kimlik doğrulama - Kurum doğrulama -
+            Gıda paylaşım sürecini yönetme - Yasal yükümlülüklerin yerine
+            getirilmesi amaçlarıyla kullanılır. 3. taraflarla izinsiz
+            paylaşılmaz.
+
+            <b>4. Belgelerin Saklanması</b>
+            Yüklenen PDF belgeleri (faaliyet belgesi, vergi levhası) yalnızca
+            doğrulama amaçlı saklanır. Yetkisiz erişimlere karşı güvenlik
+            önlemleri alınır.
+
+            <b>5. Kullanıcı Yükümlülükleri</b>
+            - Kaydedilen bilgilerin doğruluğundan kullanıcı sorumludur. - Başka
+            kişi ya da kurum adına sahte beyan verilmesi durumunda sorumluluk
+            tamamen kullanıcıya aittir. - Sisteme yapılan her başvuru/ekleme
+            yasal sorumluluk doğurabilir.
+
+            <b>6. Sistem Sorumluluğu</b>
+            - Sistem veri güvenliği ve işlem sürekliliği için azami özeni
+            gösterir. - Ancak mücbir sebeplerle oluşabilecek veri kayıplarından
+            sorumlu değildir.
+
+            <b>7. Değişiklikler</b>
+            Bu metin zaman zaman güncellenebilir. Güncellemeler sitede
+            duyurulur. Kullanıcılar güncel metni okuyup kabul etmekle
+            yükümlüdür.
+
+            <b>8. İletişim</b>
+            Gizlilik politikamızla ilgili sorular için bizimle iletişime
+            geçebilirsiniz: destek@gidayardim.org
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Kapat
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'js/isim-kontrol.js' %}"></script> {# DEĞİŞİKLİK BURADA #}
+    <script src="{% static 'js/e-posta-kontrol.js' %}"></script> {# DEĞİŞİKLİK BURADA #}
+    <script src="{% static 'js/sifre-kontrol.js' %}"></script> {# DEĞİŞİKLİK BURADA #}
+    <script src="{% static 'js/telefon-kontrol.js' %}"></script> {# DEĞİŞİKLİK BURADA #}
+    <script src="{% static 'js/stk-kontrol.js' %}"></script> {# DEĞİŞİKLİK BURADA #}
+    <script src="{% static 'js/kutuk-kontrol.js' %}"></script> {# DEĞİŞİKLİK BURADA #}
+    <script src="{% static 'js/e-tebligat-adres-kontrol.js' %}"></script> {# DEĞİŞİKLİK BURADA #}
+    <script src="{% static 'js/dosya-yukleme.js' %}"></script> {# DEĞİŞİKLİK BURADA #}
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

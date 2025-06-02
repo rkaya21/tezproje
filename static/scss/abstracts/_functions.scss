@@ -1,0 +1,5 @@
+@use "../themes/themes" as t;
+
+@function theme($type, $key) {
+  @return map-get(map-get(t.$themes, $type), $key);
+}

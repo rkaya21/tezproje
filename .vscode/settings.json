@@ -1,0 +1,18 @@
+{
+    "liveSassCompile.settings.formats": [
+      {
+        "format": "expanded", // or "compressed" for production
+        "extensionName": ".css",
+        "savePath": "/static/css" // SCSS dosyalarınızın derleneceği yol
+      }
+    ],
+    "liveSassCompile.settings.excludeList": [
+      "/**/node_modules/**",
+      "/.vscode/**"
+    ],
+    "liveSassCompile.settings.generateMap": true, // Eğer sourcemap istemiyorsanız false yapın
+  
+    // "editor.defaultFormatter": "esbenp.prettier-vscode",
+    // "djlint.showInstallError": false
+  }
+  

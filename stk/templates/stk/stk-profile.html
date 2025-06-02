@@ -1,0 +1,30 @@
+{% extends 'stk/stk-main-page.html' %}
+
+{% block title %}Profil Bilgilerim{% endblock %}
+
+{% block content %}
+<div class="container mt-4 text-white">
+    <h2>Profil Bilgilerim</h2>
+
+    {% if stk_profile %}
+        <div>
+            <p><strong>STK Adı:</strong> {{ stk_profile.stk_ad }}</p>
+            <p><strong>Temsilci Adı Soyadı:</strong> {{ stk_profile.stk_temsilci_ad }} {{ stk_profile.stk_temsilci_soyad }}</p>
+            <p><strong>E-posta:</strong> {{ stk_profile.user.email }}</p>
+            <p><strong>Adres:</strong> {{ stk_profile.adres }}</p>
+            <p><strong>Cep Telefonu:</strong> {{ stk_profile.cep_telefon }}</p>
+            <p><strong>STK Türü:</strong> {{ stk_profile.stk_turu }}</p>
+            {% if stk_profile.stk_turu == 'dernek' and stk_profile.kutuk_no %}
+                <p><strong>Kütük Numarası:</strong> {{ stk_profile.kutuk_no }}</p>
+            {% endif %}
+            {% if stk_profile.stk_turu == 'vakif' and stk_profile.etebligat %}
+                <p><strong>E-Tebligat Adresi:</strong> {{ stk_profile.etebligat }}</p>
+            {% endif %}
+            {# İhtiyacınıza göre diğer profil bilgilerini buraya ekleyebilirsiniz #}
+        </div>
+    {% else %}
+        <p>Profil bilgileriniz bulunamadı.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

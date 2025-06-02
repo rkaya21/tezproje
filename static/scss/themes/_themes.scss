@@ -1,0 +1,28 @@
+// _themes.scss
+
+$themes: (
+  "stk": (
+    bg-color: #299903,
+    navbar-bg: #2e7012,
+    navbar-text: #ffffff,
+    hover-color: #e6a815,
+    card-bg: #f2ffe6,
+    button-bg: #49688d,
+    button-hover: #3e5777,
+    button-active: #374d69,
+    icon-bg: #6c757d,
+    text-color: #fff,
+  ),
+  "restoran": (
+    bg-color: #00275a,
+    navbar-bg: #002f6c,
+    navbar-text: #ffffff,
+    hover-color: #e6a815,
+    card-bg: #e6f0ff,
+    button-hover: #fcc100,
+    gecici-input-color: #f8e21c,
+    input-focus-color: #fbff00,
+    deneme: #fcac00,
+    text-color: #000,
+  ),
+);

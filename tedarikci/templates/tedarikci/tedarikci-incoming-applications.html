@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+          crossorigin="anonymous" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+
+    <title>Gelen Başvurular</title>
+  </head>
+  <body class="my-tedarikci-container">
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg my-tedarikci-input">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{% url 'tedarikci:tedarikci_anasayfa' %}">FAZLAYIZ (TEDARİKÇİ)</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav justify-content-end w-100">
+            <a class="nav-link" href="{% url 'tedarikci:tedarikci_anasayfa' %}">Anasayfa</a>
+            <a class="nav-link" href="{% url 'tedarikci:tedarikci_gida_formu' %}">Gıda Ekle</a>
+            <a class="nav-link" href="{% url 'tedarikci:tedarikci_food_list' %}">Gıda Listesi</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'tedarikci:tedarikci_incoming_applications' %}">Gelen Başvurular</a> {# Yeni eklenen link #}
+            {# Diğer linkler buraya eklenebilir, örneğin Profil, Çıkış Yap #}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4 text-dark">
+        <h2>Gelen Başvurular</h2>
+
+        {% if applications %}
+            <div class="row">
+                {% for application in applications %}
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 bg-light text-dark">
+                             <div class="card-body">
+                                <h5 class="card-title">Başvuru Detayları</h5>
+                                <p class="card-text"><strong>Gıda Ürünü:</strong> {{ application.food_item.name }}</p>
+                                <p class="card-text"><strong>Başvuran STK:</strong> {{ application.stk_profile.stk_ad }}</p>
+                                <p class="card-text"><strong>Temsilci Adı Soyadı:</strong> {{ application.stk_profile.stk_temsilci_ad }} {{ application.stk_profile.stk_temsilci_soyad }}</p>
+                                <p class="card-text"><strong>Başvuru Durumu:</strong> 
+                                    <strong>
+                                        {% if application.status == 'pending' %}
+                                            <span class="text-warning">{{ application.get_status_display }}</span> {# Beklemede - Sarı #}
+                                        {% elif application.status == 'approved' %}
+                                            <span class="text-success">{{ application.get_status_display }}</span> {# Onaylandı - Yeşil #}
+                                        {% elif application.status == 'rejected' %}
+                                            <span class="text-danger">{{ application.get_status_display }}</span> {# Reddedildi - Kırmızı #}
+                                        {% else %}
+                                            {{ application.get_status_display }} {# Diğer durumlar için varsayılan renk #}
+                                        {% endif %}
+                                    </strong>
+                                </p>
+                                 {% if application.status == 'approved' or application.status == 'completed' %}
+                                    {% if application.final_destination %}
+                                        <p class="card-text"><strong>Nihai Durum:</strong>
+                                            {% if application.final_destination == 'awaiting_cold_storage' %}
+                                                Soğuk Depoya Gönderildi
+                                            {% elif application.final_destination == 'converted_to_fertilizer' %}
+                                                Gübre Olarak Dönüştürüldü
+                                            {% elif application.final_destination == 'disposed' %}
+                                                İmha Edildi
+                                            {% else %}
+                                                {{ application.final_destination }} {# Tanımlı olmayan bir durum gelirse olduğu gibi göster #}
+                                            {% endif %}
+                                        </p>
+                                    {% endif %}
+                                {% endif %}
+                                <p class="card-text"><strong>Başvuru Tarihi:</strong> {{ application.applied_at|date:"d.m.Y H:i" }}</p>
+                            </div>
+                            <div class="card-footer text-start"> {# text-end yerine text-start kullanarak butonları sola hizala #}
+                                {# Tedarikçinin başvuruyu onaylama veya reddetme butonları #}
+                                {% if application.status == 'pending' %}
+                                    <button class="btn btn-success btn-sm mt-2 me-2 approve-button" data-application-id="{{ application.id }}">Onayla</button> {# Onayla butonu, başvuru ID'si ile #}
+                                    <button class="btn btn-danger btn-sm mt-2 reject-button" data-application-id="{{ application.id }}">Reddet</button> {# Reddet butonu, başvuru ID'si ile #}
+                                {% elif application.status == 'approved' %}
+                                    <span class="badge bg-success">Onaylandı</span> {# Onaylandı durumunda buton yerine rozet #}
+                                {% elif application.status == 'rejected' %}
+                                     <span class="badge bg-danger">Reddedildi</span> {# Reddedildi durumunda buton yerine rozet #}
+                                {% endif %}
+                                {# card-footer'daki başvuru tarihi kaldırıldı #}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Henüz tarafınıza ulaşan bir gıda başvurusu bulunmamaktadır.</p>
+        {% endif %}
+
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          // CSRF token'ını cookie'den al
+          function getCookie(name) {
+              let cookieValue = null;
+              if (document.cookie && document.cookie !== '') {
+                  const cookies = document.cookie.split(';');
+                  for (let i = 0; i < cookies.length; i++) {
+                      const cookie = cookies[i].trim();
+                      // Does this cookie string begin with the name we want?
+                      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                          break;
+                      }
+                  }
+              }
+              return cookieValue;
+          }
+          const csrfToken = getCookie('csrftoken');
+
+          // Başvuru durumu güncelleme fonksiyonu
+          const updateApplication = (applicationId, status) => {
+              fetch('{% url "tedarikci:update_application_status" %}', { // URL'i doğru kullanıyoruz
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': csrfToken // CSRF token'ı ekle
+                  },
+                  body: JSON.stringify({ 'application_id': applicationId, 'status': status })
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert(data.message);
+                      // Sayfayı yenileyerek arayüzü güncelle
+                      window.location.reload(); 
+                  } else {
+                      alert('İşlem Başarısız: ' + data.message);
+                  }
+              })
+              .catch((error) => {
+                  console.error('Hata:', error);
+                  alert('İşlem sırasında bir hata oluştu.');
+              });
+          };
+
+          // Onayla butonlarına tıklama dinleyicisi ekle
+          const approveButtons = document.querySelectorAll('.approve-button');
+          approveButtons.forEach(button => {
+              button.addEventListener('click', function() {
+                  const applicationId = this.dataset.applicationId;
+                  if (confirm('Bu başvuruyu onaylamak istediğinizden emin misiniz? Aynı gıdaya ait diğer başvurular otomatik olarak reddedilecektir.')) {
+                      updateApplication(applicationId, 'approved');
+                  }
+              });
+          });
+
+          // Reddet butonlarına tıklama dinleyicisi ekle
+          const rejectButtons = document.querySelectorAll('.reject-button');
+          rejectButtons.forEach(button => {
+              button.addEventListener('click', function() {
+                  const applicationId = this.dataset.applicationId;
+                   if (confirm('Bu başvuruyu reddetmek istediğinizden emin misiniz?')) {
+                       updateApplication(applicationId, 'rejected');
+                   }
+              });
+          });
+
+      });
+    </script>
+
+  </body>
+</html>

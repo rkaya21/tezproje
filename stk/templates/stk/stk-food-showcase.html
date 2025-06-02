@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <title>Gıda Vitrini</title>
+  </head>
+  <body class="my-stk-container">
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg my-stk-input">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-white" href="{% url 'stk:main' %}">FAZLAYIZ (STK)</a> {# Anasayfa linki eklendi #}
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav justify-content-end w-100">
+            <a class="nav-link " href="{% url 'stk:main' %}">Anasayfa</a> {# Anasayfa linki eklendi #}
+            <a class="nav-link active" aria-current="page" href="{% url 'stk:stk_food_showcase' %}">Gıda Vitrini</a> {# Gıda Vitrini linki eklendi #}
+            <a class="nav-link " href="{% url 'stk:stk_my_applications' %}">Gıda Başvurularım</a> {# Gıda Başvurularım linki eklendi #}
+            <a class="nav-link " href="{% url 'stk:stk_test_status' %}">Test Durumu</a> {# Test Durumu linki eklenecek #}
+            <a class="nav-link " href="{% url 'stk:delivery_status' %}">Teslimat Durumu</a> {# Teslimat Durumu linki eklenecek #}
+            <a class="nav-link " href="{% url 'stk:stk_profile' %}">Profilim</a> {# Profilim linki eklenecek #}
+            <a class="nav-link " href="{% url 'stk:login'%}">Çıkış yap</a> {# Çıkış yap linki eklenecek #}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4 text-white">
+        <h2>Gıda Vitrini</h2>
+
+        {% if food_items %}
+            <div class="row">
+                {% for item in food_items %}
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 bg-dark text-white">
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <img src="{% static 'img/no_food_image.png' %}" class="card-img-top" alt="Resim Yok" style="height: 200px; object-fit: cover;">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.name }}</h5>
+                                <p class="card-text">Miktar: {{ item.quantity }} {{ item.get_unit_display }}</p>
+                                <p class="card-text">Son Kullanım Tarihi: {{ item.expiry_date }}</p>
+                                <p class="card-text">Durum: {{ item.get_status_display }}</p>
+                            </div>
+                            <div class="card-footer text-end">
+                                <small class="text-white">Yayınlanma Tarihi: {{ item.created_at|date:"d.m.Y H:i" }}</small>
+                                {% comment %} Check application status from the dictionary {% endcomment %}
+                                {% if item.user_application_status == 'pending' %}
+                                    <button class="btn btn-warning btn-sm mt-2" disabled>Beklemede</button> {# Başvuru beklemede - Sarı #}
+                                {% elif item.user_application_status == 'approved' %}
+                                    <button class="btn btn-success btn-sm mt-2" disabled>Onaylandı</button> {# Başvuru onaylandı - Yeşil #}
+                                {% elif item.user_application_status == 'rejected' %}
+                                    <button class="btn btn-danger btn-sm mt-2" disabled>Reddedildi</button> {# Başvuru reddedildi - Kırmızı #}
+                                {% else %} {# Başvuru yok (None) veya durumu farklı #}
+                                    <button class="btn btn-info btn-sm mt-2 basvur-button" data-food-id="{{ item.id }}">Başvur</button> {# Başvur butonu, açık mavi #}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Şu anda görüntülenecek bir gıda ürünü bulunmamaktadır.</p>
+        {% endif %}
+
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const buttons = document.querySelectorAll('.basvur-button');
+
+          buttons.forEach(button => {
+              button.addEventListener('click', function() {
+                  const foodId = this.dataset.foodId; // Butonun data-food-id özelliğinden gıda ID'sini al
+                  const button = this; // Buton elementini referans olarak sakla
+
+                  // CSRF token'ını cookie'den al
+                  function getCookie(name) {
+                      let cookieValue = null;
+                      if (document.cookie && document.cookie !== '') {
+                          const cookies = document.cookie.split(';');
+                          for (let i = 0; i < cookies.length; i++) {
+                              const cookie = cookies[i].trim();
+                              // Does this cookie string begin with the name we want?
+                              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                  break;
+                              }
+                          }
+                      }
+                      return cookieValue;
+                  }
+                  const csrfToken = getCookie('csrftoken');
+
+
+                  fetch('{% url "stk:apply_for_food" %}', { // Başvuru view URL'i
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRFToken': csrfToken // CSRF token'ı ekle
+                      },
+                      body: JSON.stringify({ 'food_item_id': foodId })
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                      if (data.success) {
+                          // Başvuru başarılı olursa butonu güncelle
+                          button.textContent = 'Beklemede';
+                          button.classList.remove('btn-success');
+                          button.classList.add('btn-warning'); // Veya gri renk için btn-secondary
+                          button.disabled = true; // Butonu devre dışı bırak
+                          alert(data.message); // Başarı mesajını göster
+                          // Gıda Vitrini sayfasında kalmaya devam edilecek
+                      } else {
+                          // Başvuru başarısız olursa hata mesajını göster
+                          alert('Başvuru Başarısız: ' + data.message);
+                      }
+                  })
+                  .catch((error) => {
+                      console.error('Hata:', error);
+                      alert('Başvuru sırasında bir hata oluştu.');
+                  });
+              });
+          });
+      });
+  </script>
+  </body>
+</html>

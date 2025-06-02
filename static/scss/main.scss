@@ -1,0 +1,176 @@
+@use "themes/themes" as *;
+@use "abstracts/variables" as v;
+@use "abstracts/functions" as f;
+// restoran-start
+
+.my-tedarikci {
+  &-container {
+    background-color: f.theme("restoran", bg-color);
+  }
+
+  &-button {
+    background-color: f.theme("restoran", gecici-input-color);
+
+    &:hover {
+      background-color: f.theme("restoran", button-hover);
+      color: #000;
+    }
+
+    &:active {
+      background-color: f.theme("restoran", deneme) !important;
+    }
+
+    &:focus {
+      background-color: f.theme("restoran", input-focus-color);
+      color: #000;
+    }
+  }
+
+  &-input {
+    background-color: f.theme("restoran", gecici-input-color);
+
+    &.form-control {
+      &::placeholder {
+        color: f.theme("restoran", text-color);
+      }
+
+      &:focus {
+        background-color: f.theme("restoran", input-focus-color);
+        color: f.theme("restoran", text-color);
+      }
+    }
+  }
+
+  // register
+  &-register {
+    &-form {
+      background-color: #033d88;
+    }
+  }
+}
+
+// restoran-end
+
+// stk-start
+
+.my-stk {
+  &-container {
+    background-color: f.theme("stk", bg-color);
+
+    
+  }
+
+  &-input {
+    &.form-control {
+      background-color: f.theme("stk", button-bg);
+      color: #fff;
+
+      &:focus {
+        background-color: f.theme("stk", icon-bg);
+      }
+
+      &::placeholder {
+        color: #fff;
+      }
+    }
+  }
+
+  &-button {
+    background-color: f.theme("stk", button-bg);
+
+    &:hover {
+      background-color: f.theme("stk", button-hover);
+    }
+
+    &:active {
+      background-color: f.theme("stk", button-active) !important;
+      border: none;
+    }
+  }
+
+  // register
+  &-register {
+    &-button {
+      background-color: f.theme("stk", button-bg);
+      color: #fff;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+
+    &-form {
+      background-color: #33bd05;
+    }
+  }
+}
+
+// stk-end
+
+.form-control {
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+// logo start
+.my-logo {
+  max-width: 100%;
+  object-fit: contain;
+
+  @media (max-width: 575px) {
+    max-height: 45vh;
+  }
+
+  @media (min-width: 576px) {
+    max-height: 50vh;
+  }
+
+  @media (min-width: 768px) {
+    max-height: 60vh;
+  }
+
+  @media (min-width: 992px) {
+    max-height: 65vh;
+  }
+
+  @media (min-width: 1200px) {
+    max-height: 70vh;
+  }
+
+  @media (min-width: 1400px) {
+    max-height: 75vh;
+  }
+}
+
+// logo end
+
+// password start
+.forgotten-password {
+  color: white;
+  text-decoration: none;
+  transition: 0.15s;
+
+  &:hover {
+    color: f.theme("stk", hover-color);
+  }
+}
+
+// password end
+
+.my-text {
+  &-danger {
+    color: v.$my-text-danger;
+  }
+
+  &-success {
+    color: v.$my-text-success;
+    background-color: yellowgreen;
+  }
+}
+
+.nav-link{
+  font-size: 1.25rem; 
+}
+
+

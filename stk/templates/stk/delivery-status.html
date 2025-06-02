@@ -1,0 +1,38 @@
+{% extends 'stk/stk-main-page.html' %} {# Ana layout dosyanızı buraya ekleyin #}
+
+{% block title %}Teslimat Durumu{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Teslimat Durumu</h2>
+
+    {% if distributed_applications %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Gıda Adı</th>
+                    <th>Tedarikçi</th>
+                    <th>Başvuru Durumu</th>
+                    <th>Nihai Hedef</th>
+                    <th>Başvuru Tarihi</th>
+                    {# İhtiyacınız olursa buraya ek sütunlar ekleyebilirsiniz (örneğin dağıtım tarihi) #}
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in distributed_applications %}
+                <tr>
+                    <td>{{ application.food_item.name }}</td>
+                    <td>{{ application.food_item.tedarikci.tedarikci_ad }}</td> {# Tedarikçi adı FoodItem üzerinden erişilebilir #}
+                    <td>{{ application.get_status_display }}</td> {# Durumun görünen adını almak için #}
+                    <td>{{ application.get_final_destination_display }}</td> {# Nihai hedefin görünen adını almak için #}
+                    <td>{{ application.applied_at|date:"d/m/Y H:i" }}</td> {# Başvuru tarihini biçimlendirme #}
+                    {# Buraya diğer başvuru bilgilerini ekleyebilirsiniz #}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Şu anda dağıtılmış başvurunuz bulunmamaktadır.</p>
+    {% endif %}
+</div>
+{% endblock %}
