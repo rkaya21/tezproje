@@ -18,7 +18,6 @@ dj-database-url==2.3.0
 Django==5.1.1
 django-ckeditor==6.7.1
 django-cors-headers==4.4.0
--e git+https://github.com/rkaya21/django-dockerize.git@683637271c0d12b791197e467e601cb2a8fec7be#egg=django_dockerize
 django-environ==0.11.2
 django-jazzmin==3.0.0
 django-js-asset==2.2.0
